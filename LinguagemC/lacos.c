@@ -20,4 +20,12 @@ int main() {
         printf("%d\n", i++); 
     while(i<11);
 
+    printf("\nCom for infinito:\n");
+    i=0;
+    for(;;) {
+       printf("%d\n", i++); 
+        if(i>10) break;
+    }
+
+
 }
