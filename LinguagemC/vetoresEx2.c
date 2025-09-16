@@ -39,13 +39,13 @@ int main() {
         printf("%d > ", n+1);
     }
 
-    while( i<m || j<n ) {
-        if( j==n || vetM[i] < vetN[j] ){
+    while( i<m && j<n ) {
+        if( vetM[i] < vetN[j] ){
             vetor[c] = vetM[i];
             i++;
         } 
         else {
-            if( i==m || vetM[i] > vetN[j]) {
+            if( vetM[i] > vetN[j]) {
                 vetor[c] = vetN[j];
                 j++;
                 } 
@@ -57,7 +57,16 @@ int main() {
         }
         c++;
     }
-
+    while(i<m){
+        vetor[c] = vetM[i];
+        i++;
+        c++;
+    }
+    while(j<n){
+        vetor[c] = vetN[j];
+        j++;
+        c++;
+    }
     printf("\nVetor mesclado-ordenado %d:\n",c);
     for(int k=0; k<c; k++) {
         printf("%f\n",vetor[k]);
