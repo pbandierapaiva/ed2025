@@ -1,5 +1,7 @@
 // 
-// Lê arquivo CSV e monta lista de registro de ORG especificada
+// Lê arquivo CSV e monta lista de registro de ORG especificada, alocando memória dinamicamente
+//
+// Para compilar você deve incluir o arquivo "arqutil.c"
 //
 // Paulo Bandiera Paiva
 // 06/10/2025
