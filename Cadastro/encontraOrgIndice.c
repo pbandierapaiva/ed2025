@@ -1,16 +1,15 @@
 // 
-// Lê arquivo CSV e monta lista de registro de ORG especificada, alocando memória dinamicamente
+// Encontra em arquivo Estruturado USANDO ÍNDICE e monta lista de registro de ORG especificada, alocando memória dinamicamente
 //
 // Para compilar você deve incluir o arquivo "arqutil.c"
 //
 // Paulo Bandiera Paiva
-// 06/10/2025
+// 07/10/2025
 //
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 #include "arqutil.h"
 
@@ -20,6 +19,7 @@ int main(int argc, char **argv) {
 
     Registro *listaRegistros;
 
+    // DEFINIÇÃO DO query
     if(argc<2) {  // Não passou parâmetros para  o programa
         printf("\nEntre com parte da ORG desejada: ");
         fgets(query, 100, stdin);
@@ -29,8 +29,8 @@ int main(int argc, char **argv) {
     }
     limpa(query);
 
-    encontrados = encontraRegs(query, ORG, &listaRegistros);
 
+    encontrados = encontraRegsIndiceOrg(query, &listaRegistros);
 
     // imprimeVetorRegs(listaRegistros, encontrados);
     printf("\n%d Registros encontrados\n", encontrados);

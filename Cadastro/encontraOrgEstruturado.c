@@ -1,5 +1,5 @@
 // 
-// Lê arquivo CSV e monta lista de registro de ORG especificada, alocando memória dinamicamente
+//Encontra em arquivo Estruturado e monta lista de registro de ORG especificada, alocando memória dinamicamente
 //
 // Para compilar você deve incluir o arquivo "arqutil.c"
 //
@@ -29,8 +29,8 @@ int main(int argc, char **argv) {
     }
     limpa(query);
 
-    encontrados = encontraRegs(query, ORG, &listaRegistros);
 
+    encontrados = encontraRegs(query, ORG, &listaRegistros);
 
     // imprimeVetorRegs(listaRegistros, encontrados);
     printf("\n%d Registros encontrados\n", encontrados);

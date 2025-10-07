@@ -20,9 +20,17 @@ typedef struct
     char uorg[100];    // CPO 19
 } Registro;
 
+typedef struct 
+{
+    char org[100];
+    int indice;
+} RegIndOrg;
 
 Registro coleta(char *);
 void limpa(char *);
 void imprimeReg(Registro );
 void imprimeVetorRegs(Registro *r, int n);
-int encontraRegs(char *q, int tipo, Registro **);
+int encontraRegs(char *, int , Registro **);
+
+int encontraRegsIndiceOrg(char *, Registro **);
+
