@@ -4,7 +4,7 @@
 // Paulo Bandiera Paiva
 // 06/10/2025
 //
-#define MAXLIN 900
+#define MAXLIN 900 
 
 #define NOME    0
 #define CARGO   1
