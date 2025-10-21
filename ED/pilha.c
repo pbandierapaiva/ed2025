@@ -2,9 +2,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
+
+//////// OPCIONAL para utilizar pegacara //////////
 #include <termios.h>
 #include <unistd.h>
-#include <ctype.h>
+///////////////////////////////////////////////////
+
 
 typedef struct no {
     int numero;
@@ -46,8 +50,9 @@ int peek(NoListaLigada *pilha, int *valor) {
     return 1;
 }
 
-
-// Função para ler apenas 1 caracter do teclado
+//////////////////////////////////////////////////////////////////////////
+// Função para ler apenas 1 caracter do teclado - sem teclar ENTER
+// OPCIONAL use o getchar() diretamente caso não funcione em seu sistema
 int pegacara() {
     struct termios old_tio, new_tio;
     char ch;
@@ -64,7 +69,8 @@ void clear_stdin_buffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
-//////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
 
 int main() {
     NoListaLigada *pilha=NULL;
