@@ -6,33 +6,43 @@
 
 typedef struct no {
     int numero;
+    struct no *pai;
     struct no *fe;
     struct no *fd;
 } No;
 
-void insereNo(No **arv, int valor){
+No *criaNo(No *pai, int val) {
     No *novoNo=NULL;
 
+    novoNo = malloc( sizeof(No) );
+    if(!novoNo) {
+        printf("ERRO de alocação de memória");
+        exit(-1);
+    }
+    novoNo->numero=val;
+    novoNo->pai=pai;
+    novoNo->fd=NULL;
+    novoNo->fe=NULL;
+    return novoNo;
+}
 
+void insereNo(No **arv, int valor){
     if(! *arv ) {     // arv é NULO
-        novoNo = malloc( sizeof(No) );
-        if(!novoNo) {
-            printf("ERRO de alocação de memória");
-            exit(-1);
-        }
-        novoNo->numero=valor;
-        novoNo->fd=NULL;
-        novoNo->fe=NULL;
-
-        *arv = novoNo;
+        *arv = criaNo(NULL, valor);
         return;
     }
     if( (*arv)->numero < valor ) {
-        insereNo( &((*arv)->fd), valor );
+        if( (*arv)->fd )
+            insereNo( &((*arv)->fd), valor );
+        else  // fd é NULL
+            (*arv)->fd = criaNo(*arv,valor);
     }
     else
     {
-        insereNo( &((*arv)->fe), valor );
+        if( (*arv)->fe )
+            insereNo( &((*arv)->fe), valor );
+        else  // fe é NULL
+            (*arv)->fe = criaNo(*arv,valor);
     }
     return;
 }
@@ -70,22 +80,43 @@ void imprimePreOrdem(No *arv) {
 }
 
 int altura(No *arv) {
-    int h=0;
     int he,hd;
 
-    if( !arv ) return 0;
-    if(!arv->fe && !arv->fd ) return 0; // não tem filhos
-    if(arv->fe)
-        he = altura(arv->fe);
-     if(arv->fd)
-        hd = altura(arv->fd);   
+    if( !arv ) return -1;
+    he = altura(arv->fe);
+    hd = altura(arv->fd);   
     if(he>hd) return he+1;
     return hd+1;
+}
+
+int profundidade(No *arv) {
+    if(arv==NULL) return -1;
+    return 1+profundidade(arv->pai);
+}
+
+No *proximo(No *meuno) {
+    No *paux;
+
+    if(meuno->fd==NULL) {
+        if( meuno->pai == NULL ) //é a raiz
+            return NULL;
+        if(meuno->pai->fe==meuno)
+            return meuno->pai;
+        return meuno->pai->pai;
+    }
+    // tem filho direito meuno->fd != NULL
+    if( meuno->fd->fe==NULL )
+        return meuno->fd;
+    paux = meuno->fd->fe;
+    while(paux->fe!=NULL)
+        paux = paux->fe;
+    return paux;
 }
 
 int main() {
 
     No *arvore = NULL;
+    No *p;
 
     insereNo(&arvore, 5);
     insereNo(&arvore, 9);
@@ -106,5 +137,7 @@ int main() {
 
     printf("Altura da árvore é %d\n", altura(arvore));
 
+    p = proximo(arvore);
+    printf("o próximo da raiz tem valor %d\n", p->numero);
     return 0;
 }
