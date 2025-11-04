@@ -69,6 +69,20 @@ void imprimePreOrdem(No *arv) {
     imprimePreOrdem(arv->fd);
 }
 
+int altura(No *arv) {
+    int h=0;
+    int he,hd;
+
+    if( !arv ) return 0;
+    if(!arv->fe && !arv->fd ) return 0; // não tem filhos
+    if(arv->fe)
+        he = altura(arv->fe);
+     if(arv->fd)
+        hd = altura(arv->fd);   
+    if(he>hd) return he+1;
+    return hd+1;
+}
+
 int main() {
 
     No *arvore = NULL;
@@ -89,6 +103,8 @@ int main() {
     imprimePreOrdem(arvore);
     printf("---POS-ORDEM---\n");
     imprimePosOrdem(arvore);
+
+    printf("Altura da árvore é %d\n", altura(arvore));
 
     return 0;
 }
