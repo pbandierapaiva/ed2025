@@ -113,27 +113,96 @@ No *proximo(No *meuno) {
     return paux;
 }
 
+No *removeRaiz( No *raiz ) {
+    No *p, *q;
+
+    if( ! raiz->fe ) {// Filho à esquerda é NULL
+        q = raiz->fd;
+        q->pai = raiz->pai;
+    }
+    else {
+        p = raiz;
+        q = raiz->fe;
+        while( q->fd ) {  // q->fd não é NULL
+            p=q;
+            q=q->fd;    
+        }
+        if( p != raiz ) {
+            p->fd = q->fe;
+            q->fe = raiz->fe;
+        }
+        q->pai = raiz->pai;
+        q->fd = raiz->fd;
+    }
+    free(raiz);
+    return q;
+}
+
+No *removeNo( No *no ) {
+    No *p;
+
+    if( no->pai==NULL)   // É RAIZ
+        return removeRaiz( no );
+    p = no->pai;
+    if( p->fe == no )
+        p->fe = removeRaiz( no );
+    else
+        p->fd = removeRaiz( no );
+    while( p->pai )
+        p = p->pai;
+    return p;
+}
+
+
 int main() {
 
     No *arvore = NULL;
     No *p;
 
-    insereNo(&arvore, 5);
-    insereNo(&arvore, 9);
-    insereNo(&arvore, 15);
-    insereNo(&arvore, 3);
-    insereNo(&arvore, 2);
-    insereNo(&arvore, 7);
-    insereNo(&arvore, 4);
-    insereNo(&arvore, 6);
     insereNo(&arvore, 10);
+    insereNo(&arvore, 20);
+    insereNo(&arvore, 30);
+    insereNo(&arvore, 4);
+    insereNo(&arvore, 5);
+    insereNo(&arvore, 6);
+    insereNo(&arvore, 7);
+    insereNo(&arvore, 8);
+    insereNo(&arvore, 9);
+    insereNo(&arvore, 11);
     insereNo(&arvore, 12);
+    insereNo(&arvore, 13);
+    insereNo(&arvore, 14);
+    insereNo(&arvore, 15);
+    insereNo(&arvore, 16);
+    insereNo(&arvore, 17);
+    insereNo(&arvore, 18);
+    insereNo(&arvore, 19);
+    insereNo(&arvore, 21);
+    insereNo(&arvore, 22);
+    insereNo(&arvore, 23);
+    insereNo(&arvore, 24);
+    insereNo(&arvore, 25);
+    insereNo(&arvore, 26);
+    insereNo(&arvore, 27);
+    insereNo(&arvore, 28);
+
+
+    printf("Removendo %d\n",arvore->fd->numero);
+    arvore = removeNo(arvore->fd);
+
+
+    printf("Removendo %d\n",arvore->numero);
+    arvore = removeNo(arvore);
+    
+    
+    printf("Removendo %d\n",arvore->fe->fd->numero);
+    arvore = removeNo(arvore->fe->fd);
 
     imprimeEmOrdem(arvore);
-    printf("---PRE-ORDEM---\n");
-    imprimePreOrdem(arvore);
-    printf("---POS-ORDEM---\n");
-    imprimePosOrdem(arvore);
+    // printf("---PRE-ORDEM---\n");
+    // imprimePreOrdem(arvore);
+    // printf("---POS-ORDEM---\n");
+    // imprimePosOrdem(arvore);
 
     printf("Altura da árvore é %d\n", altura(arvore));
 
