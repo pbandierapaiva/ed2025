@@ -118,7 +118,6 @@ No *removeRaiz( No *raiz ) {
 
     if( ! raiz->fe ) {// Filho à esquerda é NULL
         q = raiz->fd;
-        q->pai = raiz->pai;
     }
     else {
         p = raiz;
@@ -131,9 +130,10 @@ No *removeRaiz( No *raiz ) {
             p->fd = q->fe;
             q->fe = raiz->fe;
         }
-        q->pai = raiz->pai;
+        
         q->fd = raiz->fd;
     }
+    q->pai = raiz->pai;
     free(raiz);
     return q;
 }
