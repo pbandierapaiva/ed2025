@@ -11,42 +11,6 @@ typedef struct no {
     struct no *fd;
 } No;
 
-No *criaNo(No *pai, int val) {
-    No *novoNo=NULL;
-
-    novoNo = malloc( sizeof(No) );
-    if(!novoNo) {
-        printf("ERRO de alocação de memória");
-        exit(-1);
-    }
-    novoNo->numero=val;
-    novoNo->pai=pai;
-    novoNo->fd=NULL;
-    novoNo->fe=NULL;
-    return novoNo;
-}
-
-void insereNo(No **arv, int valor){
-    if(! *arv ) {     // arv é NULO
-        *arv = criaNo(NULL, valor);
-        return;
-    }
-    if( (*arv)->numero < valor ) {
-        if( (*arv)->fd )
-            insereNo( &((*arv)->fd), valor );
-        else  // fd é NULL
-            (*arv)->fd = criaNo(*arv,valor);
-    }
-    else
-    {
-        if( (*arv)->fe )
-            insereNo( &((*arv)->fe), valor );
-        else  // fe é NULL
-            (*arv)->fe = criaNo(*arv,valor);
-    }
-    return;
-}
-
 void imprimeEmOrdem(No *arv) {
     if(!arv)
         return;
@@ -89,6 +53,30 @@ int altura(No *arv) {
     return hd+1;
 }
 
+int fb(No *nodo) {
+    return altura(nodo->fd) - altura(nodo->fe);
+}
+
+No *avl(No *nodo) {
+    int fbn;
+    No *p;
+
+    fbn = fb(nodo);
+    if( fbn>1 || fbn<-1 )
+        return nodo;
+    if(nodo->fe) {
+        p = avl(nodo->fe);
+        if(p)
+            return p;
+    }
+    if(nodo->fd) {
+        p = avl(nodo->fd);
+        if(p)
+            return p;
+    }   
+    return NULL;
+}
+
 int profundidade(No *arv) {
     if(arv==NULL) return -1;
     return 1+profundidade(arv->pai);
@@ -128,15 +116,22 @@ No *removeRaiz( No *raiz ) {
         }
         if( p != raiz ) {
             p->fd = q->fe;
+            if(p->fd) 
+                p->fd->pai = p;
             q->fe = raiz->fe;
+            if(q->fe)
+                q->fe->pai = q;
         }
         
         q->fd = raiz->fd;
+        if(q->fd)
+            q->fd->pai = q;
     }
     q->pai = raiz->pai;
     free(raiz);
     return q;
 }
+
 
 No *removeNo( No *no ) {
     No *p;
@@ -154,59 +149,90 @@ No *removeNo( No *no ) {
 }
 
 
+No *achaRaiz(No *nodo){
+    while(nodo->pai!=NULL)
+        nodo = nodo->pai;
+    return nodo;
+}
+
+No *criaNo(No *pai, int val) {
+    No *novoNo=NULL;
+
+    printf("Criando nó %d\n", val);
+
+    novoNo = malloc( sizeof(No) );
+    if(!novoNo) {
+        printf("ERRO de alocação de memória");
+        exit(-1);
+    }
+    novoNo->numero=val;
+    novoNo->pai=pai;
+    novoNo->fd=NULL;
+    novoNo->fe=NULL;
+    
+    if( avl( achaRaiz(novoNo) ) )
+        printf("A árvore foi desbalanceada/deixou de ser AVL\n");
+
+    return novoNo;
+}
+
+void insereNo(No **arv, int valor){
+    if(! *arv ) {     // arv é NULO
+        *arv = criaNo(NULL, valor);
+        return;
+    }
+    if( (*arv)->numero < valor ) {
+        if( (*arv)->fd )
+            insereNo( &((*arv)->fd), valor );
+        else  // fd é NULL
+            (*arv)->fd = criaNo(*arv,valor);
+    }
+    else
+    {
+        if( (*arv)->fe )
+            insereNo( &((*arv)->fe), valor );
+        else  // fe é NULL
+            (*arv)->fe = criaNo(*arv,valor);
+    }
+    return;
+}
+
 int main() {
 
     No *arvore = NULL;
     No *p;
 
-    insereNo(&arvore, 10);
-    insereNo(&arvore, 20);
-    insereNo(&arvore, 30);
-    insereNo(&arvore, 4);
-    insereNo(&arvore, 5);
-    insereNo(&arvore, 6);
-    insereNo(&arvore, 7);
-    insereNo(&arvore, 8);
-    insereNo(&arvore, 9);
-    insereNo(&arvore, 11);
-    insereNo(&arvore, 12);
-    insereNo(&arvore, 13);
-    insereNo(&arvore, 14);
-    insereNo(&arvore, 15);
-    insereNo(&arvore, 16);
-    insereNo(&arvore, 17);
-    insereNo(&arvore, 18);
-    insereNo(&arvore, 19);
-    insereNo(&arvore, 21);
-    insereNo(&arvore, 22);
-    insereNo(&arvore, 23);
-    insereNo(&arvore, 24);
-    insereNo(&arvore, 25);
-    insereNo(&arvore, 26);
-    insereNo(&arvore, 27);
-    insereNo(&arvore, 28);
+    for(int i=1;i<5;i++) 
+        insereNo(&arvore, i);
 
+    printf("Altura da árvore é %d\n", altura(arvore));
 
-    printf("Removendo %d\n",arvore->fd->numero);
-    arvore = removeNo(arvore->fd);
+    printf("FB da raiz é: %d\n", fb(arvore));
 
+    p = avl(arvore);
+    if(!p)
+        printf("A árvore está balanceada\n");
+    else
+        printf("Árvore não balanceada\n");
 
-    printf("Removendo %d\n",arvore->numero);
-    arvore = removeNo(arvore);
     
-    
-    printf("Removendo %d\n",arvore->fe->fd->numero);
-    arvore = removeNo(arvore->fe->fd);
+    // imprimeEmOrdem(arvore);
 
-    imprimeEmOrdem(arvore);
+    // Teste remoção de nós
+    // printf("Removendo %d\n",arvore->fd->numero);
+    // arvore = removeNo(arvore->fd);
+    // printf("Removendo %d\n",arvore->numero);
+    // arvore = removeNo(arvore);
+    // printf("Removendo %d\n",arvore->fe->fd->numero);
+    // arvore = removeNo(arvore->fe->fd);
+
     // printf("---PRE-ORDEM---\n");
     // imprimePreOrdem(arvore);
     // printf("---POS-ORDEM---\n");
     // imprimePosOrdem(arvore);
 
-    printf("Altura da árvore é %d\n", altura(arvore));
 
-    p = proximo(arvore);
-    printf("o próximo da raiz tem valor %d\n", p->numero);
+    // p = proximo(arvore);
+    // printf("o próximo da raiz tem valor %d\n", p->numero);
     return 0;
 }
