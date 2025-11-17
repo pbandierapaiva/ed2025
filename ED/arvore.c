@@ -176,6 +176,70 @@ No *criaNo(No *pai, int val) {
     return novoNo;
 }
 
+void rotacaoDireita( No **arv ) {
+    No *p = *arv;
+    No *u = p->fe;
+
+    p->fe = u->fd;
+    u->fd = p;
+    *arv = u;
+}
+
+void rotacaoEsquerda( No **arv ) {
+    No *p = *arv;
+    No *u = p->fd;
+
+    p->fd = u->fe;
+    u->fe = p;
+    *arv = u;
+}
+
+void rotacaoDuplaDireita( No **arv ) {
+    rotacaoEsquerda( &( (*arv)->fe) );
+    rotacaoDireita( arv );
+}
+
+void rotacaoDuplaEsquerda( No **arv ) {
+    rotacaoDireita( &( (*arv)->fd) );
+    rotacaoEsquerda( arv );
+}
+
+void balanceia( No **arv ) {
+    No *p, *q, **apontaq;
+    int fbq;
+
+    if( *arv == NULL ) return;
+    p = *arv;
+    while(p->pai !=NULL )
+        p = p->pai;
+    
+    q = avl( p );
+    // quem está apontando para o q? faça ser apontaq
+    if( q->pai == NULL )
+        apontaq = arv;
+    else {
+        if( q->pai->fe == q )
+            apontaq = &(q->pai->fe);
+        else
+            apontaq = &(q->pai->fd);
+    }
+
+    fbq = fb(q);
+    if(fbq>1) {
+        if( fb(q->fd)>0 )
+            rotacaoEsquerda( apontaq );
+        else
+            rotacaoDuplaEsquerda( apontaq );
+    }
+    else {
+        if( fb(q->fe)>0 )
+            rotacaoDireita( apontaq );
+        else
+            rotacaoDuplaDireita( apontaq );
+    }
+}
+
+
 void insereNo(No **arv, int valor){
     if(! *arv ) {     // arv é NULO
         *arv = criaNo(NULL, valor);
@@ -184,26 +248,46 @@ void insereNo(No **arv, int valor){
     if( (*arv)->numero < valor ) {
         if( (*arv)->fd )
             insereNo( &((*arv)->fd), valor );
-        else  // fd é NULL
+        else  {// fd é NULL
             (*arv)->fd = criaNo(*arv,valor);
+            balanceia( arv );
+        }
     }
-    else
+    else if( (*arv)->numero > valor )  
     {
         if( (*arv)->fe )
             insereNo( &((*arv)->fe), valor );
-        else  // fe é NULL
+        else  { // fe é NULL
             (*arv)->fe = criaNo(*arv,valor);
+            balanceia( arv );
+        }
     }
     return;
 }
+
 
 int main() {
 
     No *arvore = NULL;
     No *p;
 
-    for(int i=1;i<5;i++) 
-        insereNo(&arvore, i);
+    // for(int i=1;i<5;i++) 
+    //     insereNo(&arvore, i);
+
+    insereNo(&arvore, 120 );
+    insereNo(&arvore, 130 );
+    insereNo(&arvore, 100 );
+    insereNo(&arvore, 80 );
+    insereNo(&arvore, 110 );
+    insereNo(&arvore, 200 );
+    insereNo(&arvore, 150 );
+    
+    imprimeEmOrdem(arvore);
+
+    // rotacaoDuplaDireita(&arvore);
+
+
+
 
     printf("Altura da árvore é %d\n", altura(arvore));
 
