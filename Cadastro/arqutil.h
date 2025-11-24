@@ -26,6 +26,18 @@ typedef struct
     int indice;
 } RegIndOrg;
 
+typedef struct 
+{
+    char nome[100];
+    long int localiza;
+} RegIndNome;
+
+typedef struct 
+reg {
+    RegIndNome registro;
+    struct reg *proximo;
+} ListaRegNome;
+ 
 Registro coleta(char *);
 void limpa(char *);
 void imprimeReg(Registro );

@@ -1,7 +1,7 @@
 ### Makefile para compilar todos os executáveis
 
 
-all: encontraOrg.out encontraOrgInd.out encontraOrgEstruturado.out cadlista.out
+all: encontraOrg.out encontraOrgInd.out encontraOrgEstruturado.out cadlista.out encontraNomeIndLista.out
 
 clean:
 	rm *.o *.out
@@ -15,6 +15,8 @@ encontraOrgInd.out: encontraOrgIndice.o arqutil.o
 	gcc -o encontraOrgInd.out encontraOrgIndice.o arqutil.o
 encontraOrgEstruturado.out: encontraOrgEstruturado.o arqutil.o
 	gcc -o encontraOrgEstruturado.out encontraOrgEstruturado.o arqutil.o
+encontraNomeIndLista.out: encontraNomeIndLista.o arqutil.o
+	gcc -o encontraNomeIndLista.out encontraNomeIndLista.o arqutil.o
 
 cadlista.o: cadlista.c cadlista.h arqutil.h
 	gcc -g -c cadlista.c
@@ -24,7 +26,8 @@ encontraOrgIndice.o: encontraOrgIndice.c  arqutil.h
 	gcc -c encontraOrgIndice.c
 encontraOrgEstruturado.o: encontraOrgEstruturado.c arqutil.h
 	gcc -c encontraOrgEstruturado.c
-
+encontraNomeIndLista.o: encontraNomeIndLista.c arqutil.h
+	gcc -g -c encontraNomeIndLista.c
 
 arqutil.o: arqutil.c arqutil.h
 	gcc -g -c arqutil.c

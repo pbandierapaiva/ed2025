@@ -214,7 +214,9 @@ void balanceia( No **arv ) {
         p = p->pai;
     
     q = avl( p );
-    // quem está apontando para o q? faça ser apontaq
+    if(!q) return; // q é NULO, árvore AVL
+
+     // quem está apontando para o q? faça ser apontaq   
     if( q->pai == NULL )
         apontaq = arv;
     else {
@@ -280,7 +282,9 @@ int main() {
     insereNo(&arvore, 80 );
     insereNo(&arvore, 110 );
     insereNo(&arvore, 200 );
-    insereNo(&arvore, 150 );
+    insereNo(&arvore, 210 );
+    insereNo(&arvore, 205 );
+   
     
     imprimeEmOrdem(arvore);
 
