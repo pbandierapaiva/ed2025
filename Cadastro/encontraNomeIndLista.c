@@ -32,7 +32,7 @@ void insere(ListaRegNome **lista, RegIndNome registro) {
     *lista = novo;
 }
 
-void pegaRegistroCSV( char *arqcsv, long int loc) {
+void pegaRegistroCSV( char *arqcsv, ListaRegNome *res) {
     FILE *arq;
     char linha[MAXLIN];
     Registro reg;
@@ -43,24 +43,32 @@ void pegaRegistroCSV( char *arqcsv, long int loc) {
             exit(-1);
         }
 
-    fseek( arq, loc, 0);
-    fgets(linha, MAXLIN, arq);
-    reg = coleta(linha);
+    while( res ) {    //res não é NULO
+        fseek( arq, res->registro.localiza, 0);
+        fgets(linha, MAXLIN, arq);
+        reg = coleta(linha);
+        imprimeReg(reg);
+        res = res->proximo;
+    }
 
-    imprimeReg(reg);
 }
 
 void busca(ListaRegNome *lista, char *q){
+
+    ListaRegNome *resultados=NULL;
     
-    if(!lista) return;
-    while( strstr( lista->registro.nome, q)==NULL ){
-        if(lista->proximo==NULL) return; 
+    while( lista ) {   // enquanto lista não for nulo
+        // if( strstr( lista->registro.nome, q) ){  // resultado strstr diferente de nulo = ACHOU!
+        if( strcmp( lista->registro.nome, q)==0 ){  // resultado strcmp 0 = ACHOU!
+            insere(&resultados, lista->registro);
+        }
         lista = lista->proximo;
     }
 
-    if(lista) {
-        pegaRegistroCSV( ARQUIVOCSV, lista->registro.localiza);
-    }
+    if(resultados) 
+        pegaRegistroCSV( ARQUIVOCSV, resultados);
+    else 
+        printf("\nNenhum registro encontrado,\n");
 }
 
 int main() {
@@ -96,7 +104,8 @@ int main() {
     printf("Arquivo lido e indexado em lista ligada! (Tempo %f s)\n", 
                         ((double)(end - start)) / CLOCKS_PER_SEC);
 
-    printf("\nEntre com parte do nome a ser pesquisado: ");
+
+    printf("\nEntre com nome completo a ser pesquisado: ");
     fgets(nomeq,100,stdin);
     limpa(nomeq);
 

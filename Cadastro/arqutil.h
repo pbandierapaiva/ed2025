@@ -37,6 +37,14 @@ reg {
     RegIndNome registro;
     struct reg *proximo;
 } ListaRegNome;
+
+typedef struct noavl {
+    RegIndNome reg;
+    struct noavl *pai;
+    struct noavl *fe;
+    struct noavl *fd;
+} NoAVL;
+
  
 Registro coleta(char *);
 void limpa(char *);
